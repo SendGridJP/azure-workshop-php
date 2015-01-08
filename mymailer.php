@@ -16,13 +16,58 @@
 			$this->sg_password = getenv("SENDGRID_PASSWORD");
 		}
 
-		public function send($to)
+		public function send($to, $name)
 		{
 			/* CREATE THE SENDGRID MAIL OBJECT
 			====================================================*/
 			$sendgrid = new SendGrid( $this->sg_username, $this->sg_password, array("turn_off_ssl_verification" => true) );
 			$mail = new SendGrid\Email();
 			
+			/* SMTP API
+			====================================================*/
+			// ADD THE SUBSTITUTIONS
+			$subs = array (
+			    "%name%" => array (
+			        $name
+			    )
+			);
+			foreach($subs as $tag => $replacements) {
+			    $mail->addSubstitution($tag, $replacements);
+			}
+
+			// ADD THE APP FILTERS
+			$filters = array (
+			    "clicktrack" => array (
+			        "settings" => array (
+			            "enabled" => 1
+			        )
+			    ),
+			    "opentrack" => array (
+			        "settings" => array (
+			            "enabled" => 1
+			        )
+			    ),
+			    "subscriptiontrack" => array (
+			        "settings" => array (
+			            "enabled" => 1,
+			            "text/plain" => "配信停止する場合はこちらをクリックしてください。\n<% %>\n",
+			            "text/html" => "配信停止する場合は<% こちら %>をクリックしてください。"
+			        )
+			    ),
+			    "templates" => array (
+			        "settings" => array (
+			            "enabled" => 1,
+			            "template_id" => "55cf2804-cb68-4398-b79b-891cafac942c"
+			        )
+			    )
+			);
+			foreach($filters as $filter => $contents) {
+			    $settings = $contents['settings'];
+			    foreach($settings as $key => $value) {
+			        $mail->addFilterSetting($filter, $key, $value);
+			    }
+			}
+
 			/* SEND MAIL
 			/  Replace the the address(es) in the setTo/setTos
 			/  function with the address(es) you're sending to.
@@ -32,8 +77,8 @@
 				    setFrom( "test@sendgridjp.asia" )->
 				    addTo( $to )->
 				    setSubject( "サンプルメール" )->
-				    setText( "こんにちは\n\nこれはサンプルメールです。\nSendGridへようこそ。\nhttp://www.sendgrid.com\n" )->
-				    setHtml( "こんにちは<br>\n<br>\nこれはサンプルメールです。<br>\n<a href=\"http://www.sendgrid.com\">SendGrid</a>ようこそ。<br>\n" );
+				    setText( "%name%さん、こんにちは\n\nこれはサンプルメールです。\n\nお問い合わせ\nご不明な点がございましたらお問い合わせください。\nhttps://sendgrid.kke.co.jp" )->
+				    setHtml( "%name%さん、こんにちは<br>\n<br>\nこれはサンプルメールです。<br>\n<br>\nお問い合わせ</span><br>ご不明な点がございましたら<a href='https://sendgrid.kke.co.jp'>お問い合わせ</a>ください。<br>\n" );
 			    
 			    $response = $sendgrid->send( $mail );
 			

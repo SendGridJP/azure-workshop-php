@@ -8,6 +8,7 @@
         $email    = $_POST['email'];
         $username = $_POST['username'];
         $password = $_POST['password'];
+        $name     = $_POST['name'];
         $query = "INSERT INTO users (username, password) VALUES (?, SHA(?))";
 
         $statement = $databaseConnection->prepare($query);
@@ -17,7 +18,7 @@
 
         // SendEmail
         $mailer = new MyMailer();
-        $mailer->send($email);
+        $mailer->send($email, $name);
         // 
 
         $creationWasSuccessful = $statement->affected_rows == 1 ? true : false;
@@ -61,6 +62,10 @@
                     <li>
                         <label for="password">Password:</label>
                         <input type="password" name="password" value="" id="password" />
+                    </li>
+                    <li>
+                        <label for="name">Name:</label>
+                        <input type="text" name="name" value="" id="name" />
                     </li>
                 </ol>
                 <input type="submit" name="submit" value="Submit" />
