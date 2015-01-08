@@ -32,8 +32,8 @@
 				    setFrom( "test@sendgridjp.asia" )->
 				    addTo( $to )->
 				    setSubject( "サンプルメール" )->
-				    setText( "こんにちは\n\nこれはサンプルメールです。\nSendGridへようこそ。\nhttp://www.sendgrid.com\n" )->
-				    setHtml( "こんにちは<br>\n<br>\nこれはサンプルメールです。<br>\n<a href=\"http://www.sendgrid.com\">SendGrid</a>ようこそ。<br>\n" );
+				    setText( "%name%さん、こんにちは\n\nこれはサンプルメールです。\n\nお問い合わせ\nご不明な点がございましたらお問い合わせください。\nhttps://sendgrid.kke.co.jp" )->
+				    setHtml( "%name%さん、こんにちは<br>\n<br>\nこれはサンプルメールです。<br>\n<br>\nお問い合わせ</span><br>ご不明な点がございましたら<a href='https://sendgrid.kke.co.jp'>お問い合わせ</a>ください。<br>\n" );
 			    
 			    $response = $sendgrid->send( $mail );
 			
