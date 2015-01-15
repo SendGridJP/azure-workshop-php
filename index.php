@@ -4,19 +4,19 @@
 
     if (isset($_POST['submit'])){
         $email    = $_POST['email'];
-        $name     = $_POST['name'];
+        //$name     = $_POST['name'];
 
         // SendEmail
         $mailer = new MyMailer();
-        $response = $mailer->send($email,$name);
+        $response = $mailer->send($email);
 
         if ($response->message === "success")
         {
-            header ("Location: index.php");
+            echo "送信完了しました";
         }
         else
         {
-            echo "Failed";
+            echo "エラーが発生しました";
         }
     }
     
@@ -32,10 +32,12 @@
                         <label for="email">Email:</label>
                         <input type="text" name="email" value="" id="email" />
                     </li>
+                    <!--
                     <li>
                         <label for="name">Name:</label>
                         <input type="text" name="name" value="" id="name" />
                     </li>
+                    -->
                 </ol>
                 <input type="submit" name="submit" value="Submit" />
             </fieldset>

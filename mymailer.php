@@ -16,20 +16,25 @@
 			$this->sg_password = getenv("SENDGRID_PASSWORD");
 		}
 
-		public function send($to,$name)
+		public function send($to)
 		{
 			/* CREATE THE SENDGRID MAIL OBJECT
 			====================================================*/
 			$sendgrid = new SendGrid( $this->sg_username, $this->sg_password, array("turn_off_ssl_verification" => true) );
 			$mail = new SendGrid\Email();
 			
+			/*
+			//宛名追加
 			$subs = array(
 				"%name%" => array($name)
 			);
 			foreach($subs as $tag => $replacements){
 				$mail->addSubstitution($tag,$replacements);
 			}
+			*/
 			
+			/*
+			//テンプレート有効化
 			$filters=array(
 				"templates" => array(
 					"settings" => array(
@@ -46,6 +51,7 @@
 					$mail->addFilterSetting($filter,$key,$value);
 				}
 			}
+			*/
 			
 			/* SEND MAIL
 			/  Replace the the address(es) in the setTo/setTos
@@ -56,10 +62,10 @@
 				    setFrom( "test@sendgridjp.asia" )->
 				    addTo( $to )->
 				    setSubject( "サンプルメール" )->
-				    setText( "%name%さん、こんにちは\n\nこれはサンプルメールです。\n\nお問い合わせ\nご不明な点がございましたらお問い合わせください。\nhttps://sendgrid.kke.co.jp" )->
-				    setHtml( "%name%さん、こんにちは<br>\n<br>\nこれはサンプルメールです。<br>\n<br>\nお問い合わせ</span><br>ご不明な点がございましたら<a href='https://sendgrid.kke.co.jp'>お問い合わせ</a>ください。<br>\n" );
+				    setText( "こんにちは\n\nこれはサンプルメールです。\n\nお問い合わせ\nご不明な点がございましたらお問い合わせください。\nhttps://sendgrid.kke.co.jp" )->
+				    setHtml( "こんにちは<br>\n<br>\nこれはサンプルメールです。<br>\n<br>\nお問い合わせ</span><br>ご不明な点がございましたら<a href='https://sendgrid.kke.co.jp'>お問い合わせ</a>ください。<br>\n" );
 			    
-			    $response = $sendgrid->send( $mail ,$name);
+			    $response = $sendgrid->send( $mail);
 			
 			    if (!$response) {
 			        throw new Exception("Did not receive response.");
