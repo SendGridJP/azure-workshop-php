@@ -1,34 +1,49 @@
-    <?php 
-        require_once ("Includes/simplecms-config.php"); 
-        require_once  ("Includes/connectDB.php");
-        include("Includes/header.php");         
-     ?>
-
-
-    <div id="main">
-    <h3>Get started with your website</h3>
-
-    <ol class="round">
-        <li class="one">
-            <h5>Login as admin </h5>
-           The site admin username and password are stored in the config file in the Includes directory. 
-        </li>
-        <li class="two">
-            <h5>Customize your site</h5>
-             After you login, you can add, delete, and modify web pages.
-         </li>
-        <li class="asterisk">
-            <div class="visit">
-                To learn more about PHP, visit <a href="http://php.net" title="PHP.net Website">http://php.net</a>. 
-            </div>
-         </li>
-    </ol>
-
-
-    </div>
-
-</div> <!-- End of outer-wrapper which opens in header.pho -->
-
 <?php 
+    include("Includes/header.php"); 
+    include("mymailer.php");
+
+    if (isset($_POST['submit'])){
+        $email    = $_POST['email'];
+        //$name     = $_POST['name'];
+
+        // SendEmail
+        $mailer = new MyMailer();
+        $response = $mailer->send($email);
+
+        if ($response->message === "success")
+        {
+            echo "送信完了しました";
+        }
+        else
+        {
+            echo "エラーが発生しました";
+        }
+    }
+    
+    
+?>
+<div id="main">
+    <h2>以下のメールアドレスにメールを送信します</h2>
+        <form action="index.php" method="post">
+            <fieldset>
+                <legend>以下のメールアドレスにメールを送信します</legend>
+                <ol>
+                    <li>
+                        <label for="email">Email:</label>
+                        <input type="text" name="email" value="" id="email" />
+                    </li>
+                    <!--
+                    <li>
+                        <label for="name">Name:</label>
+                        <input type="text" name="name" value="" id="name" />
+                    </li>
+                    -->
+                </ol>
+                <input type="submit" name="submit" value="Submit" />
+            </fieldset>
+        </form>
+     </div>
+</div> <!-- End of outer-wrapper which opens in header.php -->
+<?php
     include ("Includes/footer.php");
- ?>
+?>
